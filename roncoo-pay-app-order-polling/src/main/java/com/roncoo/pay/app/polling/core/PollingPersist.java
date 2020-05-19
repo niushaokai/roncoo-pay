@@ -47,18 +47,24 @@ public class PollingPersist {
      * @param rpOrderResultQueryVo
      */
     public void getOrderResult(RpOrderResultQueryVo rpOrderResultQueryVo){
-    	Integer notifyTimes = rpOrderResultQueryVo.getNotifyTimes(); // 得到当前通知对象的通知次数
-        Integer maxNotifyTimes = rpOrderResultQueryVo.getLimitNotifyTimes(); // 最大通知次数
-        Date notifyTime = new Date(); // 本次通知的时间
-        rpOrderResultQueryVo.setEditTime(notifyTime); // 取本次通知时间作为最后修改时间
-        rpOrderResultQueryVo.setNotifyTimes(notifyTimes + 1); // 通知次数+1
+        // 得到当前通知对象的通知次数
+    	Integer notifyTimes = rpOrderResultQueryVo.getNotifyTimes();
+        // 最大通知次数
+        Integer maxNotifyTimes = rpOrderResultQueryVo.getLimitNotifyTimes();
+        // 本次通知的时间
+        Date notifyTime = new Date();
+        // 取本次通知时间作为最后修改时间
+        rpOrderResultQueryVo.setEditTime(notifyTime);
+        // 通知次数+1
+        rpOrderResultQueryVo.setNotifyTimes(notifyTimes + 1);
 
         LOG.info("notifyTimes:{}  , maxNotifyTimes:{} " ,notifyTimes , maxNotifyTimes);
         try{
             boolean processingResult = rpTradePaymentManagerService.processingTradeRecord(rpOrderResultQueryVo.getBankOrderNo());
 
             LOG.info("order processing result:{}" ,processingResult);
-            if (!processingResult){//返回失败,说明还未支付
+            //返回失败,说明还未支付
+            if (!processingResult){
                 // 通知不成功（返回的结果不是success）
                 if (rpOrderResultQueryVo.getNotifyTimes() < maxNotifyTimes) {
                     // 判断是否超过重发次数，未超重发次数的，再次进入延迟发送队列

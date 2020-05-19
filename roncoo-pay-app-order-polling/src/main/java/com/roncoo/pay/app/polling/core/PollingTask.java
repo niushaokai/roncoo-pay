@@ -58,11 +58,14 @@ public class PollingTask implements Runnable, Delayed {
      * @return
      */
     private long getExecuteTime(RpOrderResultQueryVo rpOrderResultQueryVo) {
-        long lastNotifyTime = rpOrderResultQueryVo.getLastNotifyTime().getTime(); // 最后通知时间（上次通知时间）
-        Integer notifyTimes = rpOrderResultQueryVo.getNotifyTimes(); // 已通知次数
+        // 最后通知时间（上次通知时间）
+        long lastNotifyTime = rpOrderResultQueryVo.getLastNotifyTime().getTime();
+        // 已通知次数
+        Integer notifyTimes = rpOrderResultQueryVo.getNotifyTimes();
         LOG.info("===>pollingTimes:{}", notifyTimes);
         //Integer nextNotifyTimeInterval = pollingParam.getNotifyParams().get(notifyTimes + 1); // 当前发送次数对应的时间间隔数（分钟数）
-        Integer nextNotifyTimeInterval = rpOrderResultQueryVo.getNotifyRuleMap().get(notifyTimes + 1); // 当前发送次数对应的时间间隔数（分钟数）
+        // 当前发送次数对应的时间间隔数（分钟数）
+        Integer nextNotifyTimeInterval = rpOrderResultQueryVo.getNotifyRuleMap().get(notifyTimes + 1);
         long nextNotifyTime = (nextNotifyTimeInterval == null ? 0 : nextNotifyTimeInterval * 1000) + lastNotifyTime;
         LOG.info("===>notify id:{}, nextNotifyTime:{}", rpOrderResultQueryVo.getId(), DateUtils.formatDate(new Date(nextNotifyTime), "yyyy-MM-dd HH:mm:ss SSS"));
         return nextNotifyTime;
@@ -72,11 +75,13 @@ public class PollingTask implements Runnable, Delayed {
      * 比较当前时间(task.executeTime)与任务允许执行的开始时间(executeTime).<br/>
      * 如果当前时间到了或超过任务允许执行的开始时间，那么就返回-1，可以执行。
      */
+    @Override
     public int compareTo(Delayed o) {
         PollingTask task = (PollingTask) o;
         return executeTime > task.executeTime ? 1 : (executeTime < task.executeTime ? -1 : 0);
     }
 
+    @Override
     public long getDelay(TimeUnit unit) {
         return unit.convert(executeTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
@@ -84,6 +89,7 @@ public class PollingTask implements Runnable, Delayed {
     /**
      * 执行通知处理.
      */
+    @Override
     public void run() {
         pollingPersist.getOrderResult(rpOrderResultQueryVo);
     }

@@ -52,13 +52,17 @@ public class PollingQueue implements Serializable {
             return;
         }
         LOG.info("===>addToOrderQueryTaskDelayQueue bank order no:" + rpOrderResultQueryVo.getBankOrderNo());
-        Integer notifyTimes = rpOrderResultQueryVo.getNotifyTimes(); // 通知次数
-        Integer maxNotifyTimes = rpOrderResultQueryVo.getLimitNotifyTimes(); // 最大通知次数
+        // 通知次数
+        Integer notifyTimes = rpOrderResultQueryVo.getNotifyTimes();
+        // 最大通知次数
+        Integer maxNotifyTimes = rpOrderResultQueryVo.getLimitNotifyTimes();
 
         if (rpOrderResultQueryVo.getNotifyTimes().intValue() == 0) {
-            rpOrderResultQueryVo.setLastNotifyTime(new Date()); // 第一次发送(取当前时间)
+            // 第一次发送(取当前时间)
+            rpOrderResultQueryVo.setLastNotifyTime(new Date());
         }else{
-            rpOrderResultQueryVo.setLastNotifyTime(rpOrderResultQueryVo.getEditTime()); // 非第一次发送（取上一次修改时间，也是上一次发送时间）
+            // 非第一次发送（取上一次修改时间，也是上一次发送时间）
+            rpOrderResultQueryVo.setLastNotifyTime(rpOrderResultQueryVo.getEditTime());
         }
 
         if (notifyTimes < maxNotifyTimes) {
