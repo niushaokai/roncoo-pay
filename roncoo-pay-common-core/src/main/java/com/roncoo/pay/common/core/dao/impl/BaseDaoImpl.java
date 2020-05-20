@@ -63,6 +63,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     @Autowired
     private SqlSessionTemplate sessionTemplate;
 
+    @Override
     public SqlSessionTemplate getSessionTemplate() {
         return sessionTemplate;
     }
@@ -74,6 +75,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 单条插入数据.
      */
+    @Override
     public int insert(T entity) {
         int result = sessionTemplate.insert(getStatement(SQL_INSERT), entity);
         if (result <= 0) {
@@ -85,6 +87,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 批量插入数据.
      */
+    @Override
     public int insert(List<T> list) {
         if (list.isEmpty() || list.size() <= 0) {
             return 0;
@@ -99,6 +102,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据id单条更新数据.
      */
+    @Override
     public int update(T entity) {
         entity.setEditTime(new Date());
         int result = sessionTemplate.update(getStatement(SQL_UPDATE_BY_ID), entity);
@@ -111,6 +115,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据id批量更新数据.
      */
+    @Override
     public int update(List<T> list) {
         if (list.isEmpty() || list.size() <= 0) {
             return 0;
@@ -125,6 +130,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据column批量更新数据.
      */
+    @Override
     public int update(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return 0;
@@ -139,6 +145,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据id查询数据.
      */
+    @Override
     public T getById(String id) {
         return sessionTemplate.selectOne(getStatement(SQL_SELECT_BY_ID), id);
     }
@@ -146,6 +153,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据column查询数据.
      */
+    @Override
     public T getByColumn(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
@@ -159,6 +167,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
      * @param paramMap
      * @return
      */
+    @Override
     public T getBy(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
@@ -169,6 +178,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据条件查询列表数据.
      */
+    @Override
     public List<T> listBy(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
@@ -179,6 +189,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据column查询列表数据.
      */
+    @Override
     public List<T> listByColumn(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
@@ -189,6 +200,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据column查询记录数.
      */
+    @Override
     public Long getCountByColumn(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
@@ -199,6 +211,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据id删除数据.
      */
+    @Override
     public int delete(String id) {
         return (int) sessionTemplate.delete(getStatement(SQL_DELETE_BY_ID), id);
     }
@@ -206,6 +219,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据id批量删除数据.
      */
+    @Override
     public int delete(List<T> list) {
         if (list.isEmpty() || list.size() <= 0) {
             return 0;
@@ -217,6 +231,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 根据column批量删除数据.
      */
+    @Override
     public int delete(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return 0;
@@ -228,6 +243,7 @@ public abstract class BaseDaoImpl<T extends BaseEntity> implements BaseDao<T> {
     /**
      * 分页查询数据 .
      */
+    @Override
     public PageBean listPage(PageParam pageParam, Map<String, Object> paramMap) {
         if (paramMap == null) {
             paramMap = new HashMap<String, Object>();
